@@ -3,12 +3,14 @@ var letters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", 
   , winCount = 0
   , lossCount = 0
   , guessesLeft = 0
+  , guessedLetters = []
   , defaultGuessesLeft = 9;
 
 window.addEventListener("keypress", onKeyPress, false);
 newGame();
 
 function newGame() {
+  guessedLetters = [];
   resetGuesses();
   generateRandomLetter();
   console.log(randomLetter); // Turn on to see randomLetter in console
@@ -19,19 +21,25 @@ function newGame() {
 
 function onKeyPress(key) {
   letter = key.key.toLowerCase();
-  printKeyPressed(letter);
-  guessesLeft--;
-  displayOnScreen("guessesleft", `Guesses Left: ${String(guessesLeft)}`);
-  if (String(letter) == String(randomLetter)) {
-    winCount++;
-    displayOnScreen("wins", `Wins: ${String(winCount)}`);
-    newGame();
+  if (letters.includes(letter, 0) && guessedLetters.includes(letter, 0) === false) {
+    guessedLetters.push(letter);
+    printKeyPressed(letter);
+    guessesLeft--;
+    displayOnScreen("guessesleft", `Guesses Left: ${String(guessesLeft)}`);
+    if (String(letter) == String(randomLetter)) {
+      winCount++;
+      displayOnScreen("wins", `Wins: ${String(winCount)}`);
+      newGame();
+    }
+    if (guessesLeft === 0) {
+      lossCount++;
+      displayOnScreen("losses", `Losses: ${String(lossCount)}`);
+      newGame();
+    }
   }
-  if (guessesLeft === 0) {
-    lossCount++;
-    displayOnScreen("losses", `Losses: ${String(lossCount)}`);
-    newGame();
-  }
+
+
+
 }
 
 function generateRandomLetter() {
